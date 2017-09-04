@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<!--
+Author: Li Yang
+Date: 2017-06-23
+-->
+<html>
+<head>
+  <title>零零拍</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+  <script src="lib/jquery-3.1.0.min.js"></script>
+  <!-- for table-->
+  <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+  <style rel="stylesheet">
+  .title
+  {
+    font-size:24px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-family: Georgia;
+  }
+  .subtitle, .notation
+  {
+    font-family: Georgia;
+    font-size: 20px;
+  }
+  .notation
+  {
+    margin-bottom: 10px;
+  }
+  #biddingDetails
+  {
+    display:none;
+  }
+  #biddingDetails span
+  {
+    color: #56AED4;
+  }
+  #Bid_List tbody tr td:first-child
+  {
+    cursor: pointer;
+  }
+  #Bid_List tbody tr td:first-child:hover
+  {
+    color: #56AED4;
+  }
+  #txtHint tr th:nth-child(4)
+  {
+    color:red;
+  }
+  #txtHint .display-txtHint td:nth-child(4)
+  {
+    color:red;
+  }
+  .biding-selected .btn
+  {
+    margin: 0px;
+    height: 40px;
+    padding: 4px 10px;
+    font-size: 16px;
+  }
+  .biding-selected input
+  {
+    margin: 5px 0;
+    height: 40px;
+  }
+  .form-group .col-sm-22
+  {
+    width: 100px;
+    float: left;
+  }
+  .form-horizontal .form-group{
+    margin-left: -15px;
+    margin-right: 0;
+  }
+  .form-horizontal .form-group label{
+    padding-left: 0px;
+  }
+  .form-horizontal .form-group:nth-child(4) label{
+    padding-right: 0;
+  }
+  .attention p
+  {
+    padding: 0 8px; 
+  }
+  .attention p span
+  {
+    color:red;
+  }
+  </style>
+
+</head>
+
+<body id="top" data-spy="scroll" data-target=".bs-docs-sidebar">
+  <!-- ################################################################################################ -->
+  <div class="wrapper row1">
+    <header id="header" class="hoc clear"> 
+      <div id="logo" class="fl_left">
+        <h1><a href="index.html">零零拍</a></h1>
+      </div>
+      <nav id="mainav" class="fl_right">
+        <ul class="clear">
+          <li><a href="index.php">主页</a></li>
+          <!-- <li><a href="learn.html">快速入门</a></li> -->
+          <li class="active"><a href="bidding.html">懒人投标</a></li>
+          <li><a href="http://www.ppdai.com/">拍拍贷</a></li>
+          <li><a href="info.php">个人中心</a></li>
+        </ul>
+      </nav>
+    </header>
+  </div>
+  <!-- ################################################################################################ -->
+  <!-- ################################################################################################ -->
+<div id="part4">
+
+    <div id="P4_news" style="width: 1000px; margin: 0 auto;">
+      <div class="title">散标</div>
+      <div class="notation">拍拍贷散标数据</div>
+
+      <form class="form-horizontal" role="form"> 
+        <div class="form-group col-sm-3" >
+	  <label class="col-sm-4 control-label">魔镜等级</label>
+	  <div class="col-sm-8">
+          <select class="form-control" id="creditcode" name="creditcode">
+            <option value="">All</option>
+            <option value="1">>=A</option>
+            <option value="2">B~C</option>
+            <option value="3">D~F</option>
+          </select>
+	  </div>
+	</div>
+	<div class="form-group col-sm-3">
+          <label class="col-sm-4 control-label">利率</label>
+	  <div class="col-sm-8">
+          <select class="form-control" id="rate" name="rate">
+            <option value="">All</option>
+            <option value="1"><=13%</option>
+            <option value="2">14~21%</option>
+            <option value="3">>=22%</option>
+          </select>
+  	  </div>
+        </div>
+	<div class="form-group col-sm-3">
+          <label class="col-sm-4 control-label">期限</label>
+	  <div class="col-sm-8">
+          <select class="form-control" id="months" name="months">
+            <option value="">All</option>
+            <option value="1"><=6个月</option>
+            <option value="2">7~11个月</option>
+            <option value="3">12个月</option>
+            <option value="4">>12个月</option>
+          </select>
+	  </div>
+        </div>  
+	<div class="form-group col-sm-3">
+	  <label class="col-sm-4 control-label">可投百分比</label>
+	  <div class="col-sm-8">
+          <select class="form-control" id="amountPercent" name="amountPercent">
+            <option value="">All</option>
+            <option value="1"><=20%</option>
+            <option value="2">20~40%</option>
+            <option value="3">40~70%</option>
+            <option value="4">>70%</option>
+          </select>
+	  </div>
+	</div>
+
+        <input id="update" class="btn" type="button" value="筛选">
+
+      </form>
+      <table id="Bid_List" class="display" cellspacing="0" width="100%">
+        <thead>
+          <tr>
+            <th>散标ID</th>
+            <th>名称</th>
+            <th>信用评级</th>
+            <th>金额</th>
+            <th>利率</th>
+            <th>月数</th>
+            <th>剩余金额</th>
+            <th>剩余金额百分比</th>
+
+            <!-- <th>付款方式</th>
+            <th>test1</th>
+            <th>test2</th> -->
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th>散标ID</th>
+            <th>名称</th>
+            <th>信用评级</th>
+            <th>金额</th>
+            <th>利率</th>
+            <th>月数</th>
+            <th>剩余金额</th>
+            <th>剩余金额百分比</th>
+            <!-- <th>付款方式</th>
+            <th>test1</th>
+            <th>test2</th> -->
+          </tr>
+        </tfoot>
+      </table>
+      
+      <h3 id="biddingDetails">散标<span id="bidID"></span>详细信息</h3>
+      <h3 id="txtHint"></h3>	
+      <div id="select-payment" class="biding-selected biding-selected-last">
+        <form  class = "form-horizontal" action="">  
+          <label>
+            <input class="form-control input-sm" type="text" id="isbid" placeholder="请输入你要投资的金额" />
+          </label>
+       
+          <input class="btn" type="button" value="投标" onclick="bidding()" >
+	  <div class="form-group attention">
+		<div class="col-sm-10">
+		  <p><span>注:</span></p>
+		  <p class="form-control-static">投注金额(>50且为50的倍数)</p>
+		  <p class="form-control-static">投注金额不能超过剩余可投金额</p>
+		  <p class="form-control-static">请投标前在此确认您的选择,以免造成不必要的损失</p>
+  		</div>
+	  </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+  $(document).ready(function() 
+  {
+    $('#Bid_List').DataTable( 
+    {
+      "ajax": "php/bidlist.php"
+    } );
+
+  $(document).on('click', '#Bid_List tbody tr', function () {
+    var id = $(this).find("td:first").text();
+    $("#biddingDetails span").text(id)
+    $("body,html").animate({
+        scrollTop: 1000
+    }, 1000);
+        
+    showHint(id);
+   });
+ 
+  });
+  </script>
+
+  <script type="text/javascript">
+  $(document).ready(function() 
+  {
+   
+
+    $('#update').click(function(){
+      creditcode=document.getElementById("creditcode").value;
+      console.log(creditcode);
+      rate=document.getElementById("rate").value;
+      months=document.getElementById("months").value;
+      amountPercent=document.getElementById("amountPercent").value;
+      $('#Bid_List').DataTable({
+        destroy: true,
+      "ajax": "php/bidlist.php?creditcode="+creditcode+"&rate="+rate+"&months="+months+"&amount="+amountPercent
+    });
+     
+    }); 
+    
+    
+  });
+  </script>
+
+<!-- ################################################################################################ -->
+
+
+
+<script>
+function showHint(str)
+{
+  console.log(str);
+  var xmlhttp;
+  if (str.length==0)
+  { 
+    document.getElementById("txtHint").innerHTML="";
+    return;
+  }
+  if (window.XMLHttpRequest)
+  {
+    // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+    xmlhttp=new XMLHttpRequest();
+  }
+  else
+  {
+    // IE6, IE5 浏览器执行代码
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp.onreadystatechange=function()
+  {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+      document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+      document.getElementById("txtHint").getElementsByTagName('table')[0].setAttribute("class", "display-txtHint");
+      document.getElementById("select-payment").style.display = "block";
+      document.getElementById("biddingDetails").style.display = "block";
+    }
+  }
+  xmlhttp.open("GET","/linglingpai/php/bidInfo.php?bidId="+str,true);
+  xmlhttp.send();
+}
+</script>
+
+<!-- ################################################################################################ -->
+
+
+
+<script>
+function bidding()
+{
+  var bidId=document.getElementById("bidID").innerText;
+
+  amount=document.getElementById("isbid").value;
+  console.log(bidId);
+  console.log(amount);
+  if(typeof(bidId) == "undefined")
+    return;
+  var xmlhttp;
+  if (amount%50 !=0 )
+  { 
+    alert('请输入正确金额');
+    return;
+  }
+  if (window.XMLHttpRequest)
+  {
+    // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+    xmlhttp=new XMLHttpRequest();
+  }
+  else
+  {
+    // IE6, IE5 浏览器执行代码
+    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp.onreadystatechange=function()
+  {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+      console.log(xmlhttp.responseText);
+
+      if(parseInt(xmlhttp.responseText) == 0)
+      {
+        alert('投标成功！')
+        window.location.href='info.php'; 
+      }
+      else if(parseInt(xmlhttp.responseText) == 4001)
+      {
+        alert('账户余额不足，请先充值！')
+        window.location.href='info.php'; 
+      }   
+      else
+      { 
+        alert('投标失败！'+parseInt(xmlhttp.responseText));
+      }
+    }
+  }
+  xmlhttp.open("GET","/linglingpai/php/bid.php?bidId="+bidId+"&Amount="+amount,true);
+  xmlhttp.send();
+}
+</script>
+
+
+<script>
+var xmlhttp2;
+ // document.getElementById("sign_up").style.visibility='hidden';
+if (window.XMLHttpRequest)
+{
+  xmlhttp2=new XMLHttpRequest();
+}
+else
+{
+    // IE6, IE5 浏览器执行代码
+    xmlhttp2=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  xmlhttp2.onreadystatechange=function()
+  {
+    if (xmlhttp2.readyState==4 && xmlhttp2.status==200)
+    {
+      console.log(parseInt(xmlhttp2.responseText))
+      if(parseInt(xmlhttp2.responseText)==0)
+      {
+        
+      }
+      else
+      {
+        alert('请先登录!');
+        window.location.href='https://ac.ppdai.com/oauth2/login?AppID=3bec630951ea46beb1acf8768c486dcd&ReturnUrl=http://106.14.115.248/linglingpai/info.php'; 
+      }
+      
+    }
+  }
+  xmlhttp2.open("GET","/linglingpai/php/issignin.php",true);
+  xmlhttp2.send();
+
+</script>
+
+<!-- ################################################################################################ -->
+<div class="wrapper row5 footer">
+  <div id="copyright" class="hoc clear"> 
+    <!-- ################################################################################################ -->
+    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="#">莱昂那</a></p>
+    <p class="fl_right"><a target="_blank">上海交通大学</a></p>
+    <!-- ################################################################################################ -->
+  </div>
+</div>
+<!-- ################################################################################################ -->
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
+<!-- IE9 Placeholder Support -->
+<script src="layout/scripts/jquery.placeholder.min.js"></script>
+<!-- / IE9 Placeholder Support -->
+</body>
+</html>
